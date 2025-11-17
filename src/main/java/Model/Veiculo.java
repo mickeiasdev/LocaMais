@@ -1,50 +1,125 @@
 package Model;
 
+import java.util.UUID;
+
 public class Veiculo {
 
-    // principal
-    private int id;
+    private enum StatusVeiculo {
+        DISPONIVEL,
+        ALUGADO,
+        EM_MANUTENCAO
+    }
+
+    private String id;
     private String tipo;
     private String marca;
     private String modelo;
     private int ano;
-    private String cor;
     private String placa;
+    private StatusVeiculo status = StatusVeiculo.DISPONIVEL;
 
-    // aluguel
     private double valorDiaria;
-    private boolean disponivel;
 
-    // construtor
-    public Veiculo(int id, String tipo, String marca, String modelo, int ano, String cor, String placa, double valorDiaria) {
-        this.id = id;
-        this.tipo = tipo;
-        this.marca = marca;
-        this.modelo = modelo;
-        this.ano = ano;
-        this.cor = cor;
-        this.placa = placa;
-        this.valorDiaria = valorDiaria;
-        this.disponivel = true;
+    public Veiculo(String tipo, String marca, String modelo, int ano, String placa, double valorDiaria) {
+        setId(UUID.randomUUID().toString());
+        setTipo(tipo);
+        setMarca(marca);
+        setModelo(modelo);
+        setAno(ano);
+        setPlaca(placa);
+        setValorDiaria(valorDiaria);
+        setStatus(StatusVeiculo.DISPONIVEL);
     }
 
-    // interacoes
-    public void alugar() {
-        if (disponivel) {
-            disponivel = false;
-            System.out.println("O carro " + modelo + " foi alugado com sucesso!");
-        } else {
-            System.out.println("O carro " + modelo + " não está disponível no momento.");
+    public boolean alugar() {
+        if (getStatus() == StatusVeiculo.DISPONIVEL) {
+            setStatus(StatusVeiculo.ALUGADO);
+            return true;
         }
+        return false;
     }
+
+    public void verificarDefeito(boolean status) {
+        if (status) fazerRevisao();
+        else devolver();
+    }
+
+    private void fazerRevisao() {
+        setStatus(StatusVeiculo.EM_MANUTENCAO);
+        System.out.println("Veículo enviado para manutenção!  Status: " + getStatus());
+    }
+
     public void devolver() {
-        disponivel = true;
-        System.out.println("O carro " + modelo + " foi devolvido e está disponível novamente.");
+        setStatus(StatusVeiculo.DISPONIVEL);
+        System.out.println("Veículo devolvido com sucesso! Status: " + getStatus());
     }
+
     public void exibirInfo() {
-        System.out.println("-------------------------------------------------");
         System.out.println(
-                "Tipo: " + tipo + "\nModelo: " + modelo + "\nMarca: " + marca + "\nCor: " + cor + "\nPlaca: " + placa + "\nValor da diária: R$" + valorDiaria + "\nDisponível: " + (disponivel ? "Sim" : "Não"));
-        System.out.println("-------------------------------------------------");
+                "Tipo: " + getTipo() + "\nModelo: " + getModelo() + "\nMarca: " + getMarca() + "\nPlaca: " + getPlaca() + "\nValor da diária: R$" + getValorDiaria() + "\nDisponível: " + (getStatus() == StatusVeiculo.DISPONIVEL ? "Sim" : "Não"));
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getMarca() {
+        return marca;
+    }
+
+    public void setMarca(String marca) {
+        this.marca = marca;
+    }
+
+    public String getModelo() {
+        return modelo;
+    }
+
+    public void setModelo(String modelo) {
+        this.modelo = modelo;
+    }
+
+    public int getAno() {
+        return ano;
+    }
+
+    public void setAno(int ano) {
+        this.ano = ano;
+    }
+
+    public String getPlaca() {
+        return placa;
+    }
+
+    public void setPlaca(String placa) {
+        this.placa = placa;
+    }
+
+    public StatusVeiculo getStatus() {
+        return status;
+    }
+
+    public void setStatus(StatusVeiculo status) {
+        this.status = status;
+    }
+
+    public double getValorDiaria() {
+        return valorDiaria;
+    }
+
+    public void setValorDiaria(double valorDiaria) {
+        this.valorDiaria = valorDiaria;
     }
 }
