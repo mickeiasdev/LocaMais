@@ -4,13 +4,13 @@ import java.util.UUID;
 
 public class Veiculo {
 
-    private enum StatusVeiculo {
+    public enum StatusVeiculo {
         DISPONIVEL,
         ALUGADO,
         EM_MANUTENCAO
     }
 
-    private String id;
+    private int id;
     private String tipo;
     private String marca;
     private String modelo;
@@ -20,8 +20,8 @@ public class Veiculo {
 
     private double valorDiaria;
 
-    public Veiculo(String tipo, String marca, String modelo, int ano, String placa, double valorDiaria) {
-        setId(UUID.randomUUID().toString());
+    public Veiculo(int id, String tipo, String marca, String modelo, int ano, String placa, double valorDiaria) {
+        setId(id);
         setTipo(tipo);
         setMarca(marca);
         setModelo(modelo);
@@ -56,7 +56,7 @@ public class Veiculo {
 
     public void exibirInfo() {
         System.out.println(
-                "Tipo: " + getTipo() + "\nModelo: " + getModelo() + "\nMarca: " + getMarca() + "\nPlaca: " + getPlaca() + "\nValor da diária: R$" + getValorDiaria() + "\nDisponível: " + (getStatus() == StatusVeiculo.DISPONIVEL ? "Sim" : "Não"));
+                "Acesso: " + getId() +"\nTipo: " + getTipo() + "\nModelo: " + getModelo() + "\nMarca: " + getMarca() + "\nPlaca: " + getPlaca() + "\nValor da diária: R$" + getValorDiaria());
     }
 
     public String getTipo() {
@@ -67,11 +67,11 @@ public class Veiculo {
         this.tipo = tipo;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
