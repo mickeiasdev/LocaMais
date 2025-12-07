@@ -1,32 +1,24 @@
 package Model;
 
-import java.util.UUID;
-
-public class Cliente {
-    private String id;
-    private String nome;
+public class Cliente extends Pessoa {
     private String cnh;
 
-    Cliente(String nome, String cnh) {
-        setId(UUID.randomUUID().toString());
-        setNome(nome);
+    public Cliente(String nome, String cnh) {
+        super(nome);
         setCnh(cnh);
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
+    @Override
+    public String toString() {
+        return super.toString() + " Cliente{" + "cnh=" + cnh + '}';
     }
 
     public String getNome() {
-        return nome;
+        return super.getNome();
     }
 
     public void setNome(String nome) {
-        this.nome = nome;
+        super.setNome(nome);
     }
 
     public String getCnh() {

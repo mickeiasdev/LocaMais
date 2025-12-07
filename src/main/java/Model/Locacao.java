@@ -15,40 +15,51 @@ public class Locacao {
 
     Scanner input = new Scanner(System.in);
 
-    Locacao(Veiculo veiculo, Cliente cliente) {
+    public Locacao(Veiculo veiculo, Cliente cliente) {
         setVeiculo(veiculo);
         setCliente(cliente);
     }
 
-    public void iniciarLocacao(int tempo) {
+    public boolean iniciarLocacao(int tempo) {
         Veiculo veiculo = getVeiculo();
         if (veiculo.alugar()) {
             setDataRetirada(LocalDateTime.now());
             setDataDevolucaoPrevista(LocalDateTime.now().plusDays(tempo));
             setTempo(tempo);
-            System.out.println("Locacao iniciado com sucesso! Veículo alugado por " + tempo + "dias.");
-        } else {
-            System.out.println("O veículo se encontra indisponível!  Status: " + veiculo.getStatus());
+            System.out.println("\nLocacao iniciado com sucesso! Veículo alugado por " + tempo + " dias.");
+            return true;
         }
-
+        System.out.println("\nO veículo se encontra indisponível!  Status: " + veiculo.getStatus());
+        return false;
     }
 
     public boolean finalizarLocacao() {
         setDataDevolucao(LocalDateTime.now());
-        System.out.print("Locacao finalizada! O veículo necessita de manutenção [S/N]: ");
+
+        System.out.print("\nLocacao finalizada! O veículo necessita de manutenção [S/N]: ");
+        String resUsuario = input.nextLine();
+
+        while (!resUsuario.equalsIgnoreCase("S") && !resUsuario.equalsIgnoreCase("N")) {
+            System.out.print("\nOpção inválida! Por favor digite [S] para sim ou [N] para não: ");
+            resUsuario = input.nextLine();
+        }
+
         Veiculo veiculo = getVeiculo();
-        if (input.nextLine().equalsIgnoreCase("S")) {
+
+        if (resUsuario.equalsIgnoreCase("S")) {
+            veiculo.setStatus(Veiculo.StatusVeiculo.EM_MANUTENCAO);
             veiculo.verificarDefeito(true);
             return true;
-        } else if (input.nextLine().equalsIgnoreCase("N")) {
+        } else {
             veiculo.verificarDefeito(false);
+
             if (getDataDevolucaoPrevista().isBefore(LocalDateTime.now())) {
                 long horasAtraso = ChronoUnit.HOURS.between(getDataDevolucaoPrevista(), getDataDevolucao());
                 setValor(veiculo.getValorDiaria() * (Math.ceil(horasAtraso / 24.0) + getTempo()));
             } else setValor(veiculo.getValorDiaria() * (double) getTempo());
+
             return true;
         }
-        return false;
     }
 
     public Veiculo getVeiculo() {

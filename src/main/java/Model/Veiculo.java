@@ -1,14 +1,13 @@
 package Model;
 
-import java.util.UUID;
-
-public class Veiculo {
-
+public class Veiculo implements GerarDados {
     public enum StatusVeiculo {
         DISPONIVEL,
         ALUGADO,
         EM_MANUTENCAO
     }
+
+    private static int criarId = 0;
 
     private int id;
     private String tipo;
@@ -20,8 +19,8 @@ public class Veiculo {
 
     private double valorDiaria;
 
-    public Veiculo(int id, String tipo, String marca, String modelo, int ano, String placa, double valorDiaria) {
-        setId(id);
+    public Veiculo(String tipo, String marca, String modelo, int ano, String placa, double valorDiaria) {
+        setId(criarId++);
         setTipo(tipo);
         setMarca(marca);
         setModelo(modelo);
@@ -29,6 +28,15 @@ public class Veiculo {
         setPlaca(placa);
         setValorDiaria(valorDiaria);
         setStatus(StatusVeiculo.DISPONIVEL);
+    }
+
+    public Veiculo() {
+        this("Indefinido", "Indefinido", "Indefinido", 2025, "Sem Placa", 0.0);
+    }
+
+    @Override
+    public String ficha() {
+        return getId() + "," + getTipo() + "," + getMarca() + "," + getModelo() + "," + getAno() + "," + getPlaca() + "," + getValorDiaria();
     }
 
     public boolean alugar() {
@@ -39,14 +47,25 @@ public class Veiculo {
         return false;
     }
 
+    public boolean alugar(int dias) {
+        if (!this.alugar()) {
+            return false;
+        }
+        System.out.println("Valor estimado: " + this.valorDiaria * dias);
+        return true;
+    }
+
     public void verificarDefeito(boolean status) {
         if (status) fazerRevisao();
         else devolver();
     }
 
-    private void fazerRevisao() {
-        setStatus(StatusVeiculo.EM_MANUTENCAO);
-        System.out.println("Veículo enviado para manutenção!  Status: " + getStatus());
+    private boolean fazerRevisao() {
+        if (getStatus() == StatusVeiculo.EM_MANUTENCAO) {
+            System.out.println("Veículo enviado para manutenção!  Status: " + getStatus());
+            return true;
+        }
+        return false;
     }
 
     public void devolver() {
@@ -54,9 +73,9 @@ public class Veiculo {
         System.out.println("Veículo devolvido com sucesso! Status: " + getStatus());
     }
 
-    public void exibirInfo() {
-        System.out.println(
-                "Acesso: " + getId() +"\nTipo: " + getTipo() + "\nModelo: " + getModelo() + "\nMarca: " + getMarca() + "\nPlaca: " + getPlaca() + "\nValor da diária: R$" + getValorDiaria());
+    @Override
+    public String toString() {
+        return "Acesso: " + getId() + "\nTipo: " + getTipo() + "\nModelo: " + getModelo() + "\nMarca: " + getMarca() + "\nPlaca: " + getPlaca() + "\nValor da diária: R$" + getValorDiaria();
     }
 
     public String getTipo() {
