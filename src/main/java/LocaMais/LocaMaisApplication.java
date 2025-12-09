@@ -41,6 +41,67 @@ public class LocaMaisApplication {
         return validarCliente;
     }
 
+    public static int lerAnoInteiroMenorQueAtual(Scanner input) {
+        int ano = 0;
+        boolean valido = false;
+
+        do {
+            System.out.print("Ano: ");
+
+            String linha = input.nextLine();
+
+            try {
+                if (linha.isBlank()) {
+                    throw new NumberFormatException();
+                }
+
+                ano = Integer.parseInt(linha);
+
+                if (ano < 1950 || ano > LocalDate.now().getYear()) {
+                    System.out.println("O ano deve ser entre 1950 e " + LocalDate.now().getYear() + "!");
+                } else {
+                    valido = true;
+                }
+
+            } catch (NumberFormatException e) {
+                System.out.println("Entrada inválida. Por favor, digite um número inteiro.");
+            }
+
+        } while (!valido);
+
+        return ano;
+    }
+
+    public static int lerDia (Scanner input) {
+        int ano = 0;
+        boolean valido = false;
+
+        do {
+            System.out.print("Ano: ");
+
+            String linha = input.nextLine();
+
+            try {
+                if (linha.isBlank()) {
+                    throw new NumberFormatException();
+                }
+
+                ano = Integer.parseInt(linha);
+
+                if (ano < 1950 || ano > LocalDate.now().getYear()) {
+                    System.out.println("O ano deve ser entre 1950 e " + LocalDate.now().getYear() + "!");
+                } else {
+                    valido = true;
+                }
+
+            } catch (NumberFormatException e) {
+                System.out.println("Entrada inválida. Por favor, digite um número inteiro.");
+            }
+
+        } while (!valido);
+        return ano;
+    }
+
     public static void main(String[] args) {
         SpringApplication.run(LocaMaisApplication.class, args);
 
@@ -82,29 +143,19 @@ public class LocaMaisApplication {
                         }
                         for (int i = 0; i < quantidadeCadastro; i++) {
                             System.out.println("\nDigite os informações necessárias de cadastro.");
+
+
                             System.out.print("Tipo: ");
                             String tipo = input.nextLine();
+
+
                             System.out.print("Marca: ");
                             String marca = input.nextLine();
                             System.out.print("Modelo: ");
                             String modelo = input.nextLine();
-                            boolean anoValido = false;
-                            int ano = 0;
-                            do {
-                                System.out.print("Ano: ");
-                                if (input.hasNextInt()) {
-                                    ano = input.nextInt();
-                                    input.nextLine();
-                                    if (ano < 1950 || ano > LocalDate.now().getYear()) {
-                                        System.out.println("O ano deve ser entre 1950 e " + LocalDate.now().getYear() + "!");
-                                        break;
-                                    }
-                                    anoValido = true;
-                                } else {
-                                    System.out.println("Numero inválido. Tente novamente!");
-                                    input.nextLine();
-                                }
-                            } while (!anoValido);
+
+                            int ano = lerAnoInteiroMenorQueAtual(input);
+
                             System.out.print("Placa: ");
                             String placa = input.nextLine();
                             boolean valorDiariaValida = false;
@@ -145,12 +196,12 @@ public class LocaMaisApplication {
 
                     case 3:
                         System.out.print("\nInforme o numero de acesso do veículo: ");
-                        int acesso = input.nextInt();
+                        int acessoSimulacao = input.nextInt();
                         input.nextLine();
-                        boolean acessoValido = false;
+                        boolean acessoSimulacaoValido = false;
                         for (int i = 0; i < veiculos.size(); i++) {
-                            if (acesso == veiculos.get(i).getId()) {
-                                acessoValido = true;
+                            if (acessoSimulacao == veiculos.get(i).getId()) {
+                                acessoSimulacaoValido = true;
                                 int dias = 0;
                                 boolean diasValido = false;
                                 do {
@@ -175,19 +226,19 @@ public class LocaMaisApplication {
                                 break;
                             }
                         }
-                        if (!acessoValido) {
-                            System.out.println("\nVeículo com Acesso \"" + acesso + "\" não encontrado.");
+                        if (!acessoSimulacaoValido) {
+                            System.out.println("\nVeículo com Acesso \"" + acessoSimulacao + "\" não encontrado.");
                         }
                         break;
 
                     case 4:
                         System.out.print("\nInforme o numero de acesso do veículo: ");
-                        int acesso = input.nextInt();
+                        int acessoAlugel = input.nextInt();
                         input.nextLine();
-                        boolean acessoValido = false;
+                        boolean acessoAlugelValido = false;
                         for (int i = 0; i < veiculos.size(); i++) {
-                            if (acesso == veiculos.get(i).getId()) {
-                                acessoValido = true;
+                            if (acessoAlugel == veiculos.get(i).getId()) {
+                                acessoAlugelValido = true;
                                 int dias = 0;
                                 boolean diasValido = false;
                                 do {
@@ -205,7 +256,6 @@ public class LocaMaisApplication {
                                         input.nextLine();
                                     }
                                 } while (!diasValido);
-
                                 Cliente cliente = buscarClientePorCnh(input, clientes);
                                 if (cliente != null) {
                                     Locacao locacao = new Locacao(veiculos.get(i), cliente);
@@ -224,31 +274,27 @@ public class LocaMaisApplication {
                                 break;
                             }
                         }
-                        if (!acessoValido) {
-                            System.out.println("\nVeículo com Acesso \"" + acesso + "\" não encontrado.");
+                        if (!acessoAlugelValido) {
+                            System.out.println("\nVeículo com Acesso \"" + acessoAlugel + "\" não encontrado.");
                         }
                         break;
-                        //refatorar o case5
+
                     case 5:
                         System.out.print("\nInforme o numero de acesso do veículo para devolução: ");
-                        int idDevolucao = input.nextInt();
+                        int acessoDevolucao = input.nextInt();
                         input.nextLine();
-
-                        boolean validarIdDevolucao = false;
-
+                        boolean acessoDevolucaoValidar = false;
                         for (int i = 0; i < locacoesAtivas.size(); i++) {
-                            if (idDevolucao == locacoesAtivas.get(i).getVeiculo().getId()) {
-                                validarIdDevolucao = true;
-
+                            if (acessoDevolucao == locacoesAtivas.get(i).getVeiculo().getId()) {
+                                acessoDevolucaoValidar = true;
                                 if (locacoesAtivas.get(i).finalizarLocacao()) {
                                     locacoesAtivas.remove(i);
                                     break;
                                 }
                             }
                         }
-
-                        if (!validarIdDevolucao) {
-                            System.out.println("\nVeículo com Acesso \"" + idDevolucao + "\" não encontrado.");
+                        if (!acessoDevolucaoValidar) {
+                            System.out.println("\nVeículo com Acesso \"" + acessoDevolucao + "\" não encontrado.");
                             break;
                         }
 
